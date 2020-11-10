@@ -22,9 +22,10 @@ namespace StockSupermercado
         {
 
             InitializeComponent();
-            Datos = new Stock();
+            
             Datos.listar();
             dg.DataSource = Datos.lista;
+            dgdato.DataSource = Datos.dato;
         }
         #endregion
 
@@ -42,7 +43,7 @@ namespace StockSupermercado
         decimal interes = 0m;
 
         Stock stock = new Stock();
-        Stock Datos ;
+        Stock Datos = new Stock();
          
         #endregion
 
@@ -95,6 +96,7 @@ namespace StockSupermercado
             }
             else
             {
+                Datos.Dato();
                 p2.Enabled = true;
                 btcalcular.Enabled = false;
             }
@@ -105,50 +107,67 @@ namespace StockSupermercado
         {
             try
             {
+                
                 Datos.cantidad = System.Convert.ToDecimal(txtcantidad.Text);
                 Datos.producto = txtproducto.Text;
                 Datos.precio = System.Convert.ToDecimal(txtpreciou.Text);
 
-                Datos.Cargar();
-
-                if (contador < cant.Length)
+                if (Datos.cantidad > 0 && Datos.precio > 0)
                 {
-                    cant[contador] = System.Convert.ToDecimal(Datos.cantidad);
-                    acumulado = cant[contador];
-                    contador = contador + 1;
+                    Datos.Cargar();
+
+                    if (contador < cant.Length)
+                    {
+                        cant[contador] = Datos.cantidad;
+                        acumulado = cant[contador];
+                        contador = contador + 1;
+                    }
+                    else
+                    {
+                        Redimension();
+                        cant[contador] = Datos.cantidad;
+                        acumulado = cant[contador];
+                        contador = contador + 1;
+                    }
+
+                    if (contadorp < precio.Length)
+                    {
+                        precio[contadorp] = Datos.precio;
+                        acumulado1 = precio[contadorp];
+                        contadorp = contadorp + 1;
+                    }
+                    else
+                    {
+                        Redimension1();
+                        precio[contadorp] = Datos.precio;
+                        acumulado1 = precio[contadorp];
+                        contadorp = contadorp + 1;
+                    }
+
+                    acumulado = acumulado * acumulado1;
+                    total = total + acumulado;
+
+                    txtcantidad.Text = "";
+                    txtproducto.Text = "";
+                    txtpreciou.Text = "";
+
+                    txtcantidad.Focus();
+
+                    btcalcular.Enabled = true;
                 }
                 else
                 {
-                    Redimension();
-                    cant[contador] = System.Convert.ToDecimal(Datos.cantidad);
-                    acumulado = cant[contador];
-                    contador = contador + 1;
+                    MessageBox.Show("Datos ingresados no validos");
+
+                    txtcantidad.Text = "";
+                    txtproducto.Text = "";
+                    txtpreciou.Text = "";
+
+                    txtcantidad.Focus();
                 }
+                
 
-                if (contadorp < precio.Length)
-                {
-                    precio[contadorp] = System.Convert.ToDecimal(Datos.precio);
-                    acumulado1 = precio[contadorp];
-                    contadorp = contadorp + 1;
-                }
-                else
-                {
-                    Redimension1();
-                    precio[contadorp] = System.Convert.ToDecimal(Datos.precio);
-                    acumulado1 = precio[contadorp];
-                    contadorp = contadorp + 1;
-                }
-
-                acumulado = acumulado * acumulado1;
-                total = total + acumulado;
-
-                txtcantidad.Text = "";
-                txtproducto.Text = "";
-                txtpreciou.Text = "";
-
-                txtcantidad.Focus();
-
-                btcalcular.Enabled = true;
+                
             }
             catch (Exception)
             {
@@ -218,7 +237,7 @@ namespace StockSupermercado
         private void btcargarregis_Click(object sender, EventArgs e)
         {
             Datos.CargarStock();
-           
+            
             dgdato.DataSource = Datos.dato;
             dg.DataSource = Datos.lista;
         }
@@ -294,7 +313,7 @@ namespace StockSupermercado
             Datos.Calculo();
             txtiva.Text = System.Convert.ToString(Datos.IVA);
             txttotalfinal.Text = System.Convert.ToString(Datos.TOTAL - descuento + interes);
-            Datos.Dato();
+            
             Datos.Resultado();
         }
         #endregion

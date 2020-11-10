@@ -615,7 +615,6 @@
             // btcargarregis
             // 
             this.btcargarregis.BackColor = System.Drawing.Color.Turquoise;
-            this.btcargarregis.Enabled = false;
             this.btcargarregis.Location = new System.Drawing.Point(199, 12);
             this.btcargarregis.Name = "btcargarregis";
             this.btcargarregis.Size = new System.Drawing.Size(136, 23);
